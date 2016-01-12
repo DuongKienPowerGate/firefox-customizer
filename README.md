@@ -18,7 +18,7 @@ Usage
 
 While Firefox is not running, start the script
 
-    $ ./firefox-customizer
+    $ ./firefox-customizer.sh
 
 and follow the very simple instructions (them being to click to install the
 addons and closing the browser twice).
@@ -30,16 +30,22 @@ All the configuration is done inside the script and has 5 sections:
 
 ### Addons
 
-You can add or remove Addon IDs that are being bundeled and installed.
+You can add [Firefox Addons](https://addons.mozilla.org) using their IDs as it
+is seen behind the "+ Add to Firefox" link. These addons are being donwloaded,
+bundeled and installed in one confirmation-click.
 
 ### Preferences (prefs.js)
 
-Here you can update settings from `about:config`.
+Here you can update settings from `about:config`. Note that the bold lines are
+the ones that differ from their default value. Most of them you want to set by
+using this script. There are a few settings that hold session information and
+timestamps, that need not to be set.
 
 ### Adblock Plus subscriptions
 
 I like to not be bothered by ads and therefore one section configures the
-subscriptions I like from Adblock Plus.
+subscriptions I like from Adblock Plus. See https://easylist.adblockplus.org for
+official lists and details.
 
 ### Toolbar content customization ("browser.uiCustomization.state" in prefs.js)
 
