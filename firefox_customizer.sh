@@ -98,9 +98,9 @@ toolbar_visibility_customizations=(
 )
 
 
-pid=`ps -e | grep " firefox" | cut -d" " -f1`
+pid=`ps -e | grep " firefox$" | cut -d" " -f1`
 
-if [[ $pid -gt 1 ]]; then
+if [[ -n "$pid" ]]; then
   echo "Firefox is running, please close all instances first!"
   exit 1
 fi
