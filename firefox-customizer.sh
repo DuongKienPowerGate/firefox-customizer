@@ -36,8 +36,9 @@ preferences=(
   'browser.privatebrowsing.autostart=true'
   # No remember histroy in URL bar
   'browser.urlbar.suggest.history=false'
-  # No search suggestions in URL bar
+  # No search suggestions in URL bar (also unset in DuckduckGo Addon)
   'browser.search.suggest.enabled=false'
+  'extensions.jid1-ZAdIEUB7XOzOJw@jetpack.addressbar_autocomplete=false'
   # New page tab clean
   'browser.newtabpage.enabled=false'
   'browser.newtabpage.enhanced=false'
@@ -98,7 +99,7 @@ toolbar_visibility_customizations=(
 )
 
 
-pid=`ps -e | grep " firefox$" | cut -d" " -f1`
+pid=`ps -e | grep " firefox$" | xargs | cut -d" " -f1`
 
 if [[ -n "$pid" ]]; then
   echo "Firefox is running, please close all instances first!"
