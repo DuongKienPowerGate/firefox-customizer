@@ -28,6 +28,8 @@ preferences=(
   # Make about:blank the startpage
   'browser.startup.homepage="about:blank"'
   'browser.startup.page=0'
+  # Stop domain guessing
+  'browser.fixup.alternate.enabled=false'
   # Don't remember passwords
   'signon.rememberSignons=false'
   # Do not track
