@@ -3,25 +3,67 @@
 # Addons
 #
 addons=(
-  # Adblock Plus
-  1865
-  # Adblock Plus Pop-up Addon
-  83098
-  # Classic Theme Restorer
-  472577
-  # Disconnect
-  464050
-  # DuckDuckGo Plus
-  385621
-  # RedirectCleaner
-  601248
-  # Status-4-Evar
-  235283
+  'ublock-origin'
+  'privacy-badger17'
+  'google-search-link-fix'
+  'i-dont-care-about-cookies'
+  'youtube-ssl'
+  'startpage-ssl'
+  'imdb'
+  'duck-duck-go-ssl'
+  'wikipedia-de'
+  'github'
+  'debian-packages'
+  'linux-manpages'
+  'docker-hub'
+  'php-manual-search'
+  'openstreetmap-1'
+  'google-no-country-redirect'
+  'google-encrypted-search'
+  'search-google-images'
+  'google-video-search-10562'
 )
+
+# Search engines and possibly aliases
+#
+searches=(
+  # Existing, but add alias
+  'amazondotcom=a'
+  'ebay-ch=e'
+  'wikipedia=w'
+  # New
+  'youtube-ssl=y'
+  'startpage-ssl=s'
+  'imdb=i'
+  'duckduckgo-ssl=d'
+  'wikipedia-de=wde'
+  'github=git'
+  'debian-packages=deb'
+  'linux-manpages=man'
+  'docker-hub=hub'
+  'php-manual-search=php'
+  'openstreetmap-1=o'
+  'google-no-country-redirect=gen'
+  'google-encrypted-search=g'
+  'search-google-images=gi'
+  'google-video-search-10562=gv'
+)
+
+jq '.engines[] | ."_shortName"' search.json
+
+jq '.engines[] | if select(."_shortName" == "google") then ."_metaData"+={"alias":"kaas"} else . end' search.json 
+
+
 
 # Preferences (prefs.js)
 #
 preferences=(
+  # Enable devtool, to be able to update search engines
+  'devtools.chrome.enabled=true'
+  # Disable accessibility service
+  'accessibility.force_disabled=1'
+  # Disable firstrun clickthrough tutorials
+  'browser.onboarding.enabled=false'
   # Disable to send health report
   'datareporting.healthreport.service.firstRun=true'
   'datareporting.healthreport.uploadEnabled=false'
@@ -40,65 +82,72 @@ preferences=(
   'browser.urlbar.suggest.history=false'
   # No search suggestions in URL bar (also unset in DuckduckGo Addon)
   'browser.search.suggest.enabled=false'
-  'extensions.jid1-ZAdIEUB7XOzOJw@jetpack.addressbar_autocomplete=false'
+  # No "one off" search buttons
+  'browser.urlbar.oneOffSearches=false'
   # New page tab clean
   'browser.newtabpage.enabled=false'
   'browser.newtabpage.enhanced=false'
   'browser.newtabpage.introShown=true'
-  # Adblock plus
-  'extensions.adblockplus.hideContributeButton=true'
-  # Status 4 evar
-  'extensions.caligon.s4e.progress.urlbar=0'
-  'extensions.caligon.s4e.status.popup.mouseMirror=false'
+  'browser.tabs.loadInBackground=false'
+  # Tracking Protection
+  'privacy.trackingprotection.enabled=true'
+  'privacy.trackingprotection.introCount=20'
+  'urlclassifier.trackingTable="test-track-simple,base-track-digest256,content-track-digest256"'
   # URL stop protocol hide and stop domain highlighting
   'browser.urlbar.formatting.enabled=false'
   'browser.urlbar.trimURLs=false'
-  # Classic Theme restorer
-  'extensions.classicthemerestorer.aboutprefs="category-advanced"'
-  'extensions.classicthemerestorer.am_extrabars=0'
-  'extensions.classicthemerestorer.appmenuitem=false'
-  'extensions.classicthemerestorer.ctrreset=false'
-  'extensions.classicthemerestorer.hideurelstop=true'
-  'extensions.classicthemerestorer.hideurlgo=true'
-  'extensions.classicthemerestorer.pref_actindx=15'
-  'extensions.classicthemerestorer.starinurl=true'
-  'extensions.classicthemerestorer.tabs="tabs_default"'
-  'extensions.classicthemerestorer.toolsitem=false'
   # Get rid of Pocket
-  'browser.pocket.enabled=false'
+  'extensions.pocket.enabled=false'
   # Get rid of Reader
   'reader.parse-on-load.enabled=false'
   # Get rid of Geolocation
   'geo.enabled=false'
+  # Get rid of scrrenshot functionality
+  'extensions.screenshots.disabled=true'
+  # Get rid of the bookmark star in the address bar
+  'browser.pageActions.persistedActions="{\"version\":1,\"ids\":[\"bookmark\"],\"idsInUrlbar\":[]}"'
 )
 
-# Adblock Plus subscriptions
+# Addon coustomizations (strings in the form '[path_to_json_file_under_browser_extension_data]%[jq-filter]'
 #
-adblock_subscriptions=(
-  'https://easylist-downloads.adblockplus.org/antiadblockfilters.txt'
-  'https://easylist-downloads.adblockplus.org/easylist.txt'
-  'https://easylist-downloads.adblockplus.org/easyprivacy.txt'
-  'https://easylist-downloads.adblockplus.org/easylistgermany.txt'
-  'https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt'
+addon_customizations=(
+  # Remove contect menu entry for i-cont-care-about-cookies
+  'jid1-KKzOGWgsW3Ao4Q@jetpack/storage.js%{"contextmenu":false,"whitelisted_domains":{}}'
+  # Say I saw the "comic" (introduction stuff) for Privacy Badger
+  'jid1-MnnxcxisBPnSXQ@jetpack/storage.js%.settings_map.seenComic=true'
+  # Add new lists to uBlock Origin
+  'uBlock0@raymondhill.net/storage.js%.selectedFilterLists+=["DEU-0","fanboy-annoyance","adguard-annoyance","awrl-0"]'
+  # Prevent WebRCT local IP address leak (through uBlock Origin)
+  'uBlock0@raymondhill.net/storage.js%.+={"webrtcIPAddressHidden":true}'
 )
 
 # Toolbar content customizations ("browser.uiCustomization.state" in prefs.js)
 #
 toolbar_content_customizations=(
   'PanelUI-contents=edit-controls,zoom-controls,new-window-button,privatebrowsing-button,save-page-button,print-button,history-panelmenu,fullscreen-button,find-button,preferences-button,add-ons-button'
+  'nav-bar=back-button,forward-button,urlbar-container'
   'PersonalToolbar=personal-bookmarks,ctraddon_bookmarks-menu-toolbar-button'
   'TabsToolbar=tabbrowser-tabs,new-tab-button,ctraddon_tabs-closebutton'
-  'ctraddon_addon-bar=ctraddon_addonbar-close,customizableui-special-spring1'
-  'nav-bar=bookmarks-menu-button,ctraddon_back-forward-button,urlbar-container'
-  'status4evar-status-bar=status4evar-progress-widget,status4evar-status-widget,status4evar-download-button,developer-button'
 )
 
 # Toolbar visibility customizations (xulstore.json)
 #
 toolbar_visibility_customizations=(
-  'ctraddon_addon-bar="collapsed":"true","currentset":"ctraddon_addonbar-close,customizableui-special-spring1,ctraddon_statusbar"'
   'toolbar-menubar="autohide":"false","currentset":"menubar-items"'
 )
+
+# userChrome.css
+#
+userchrome_contents="/* Hide the Hamburger button */
+#PanelUI-menu-button {
+    display: none;
+}
+
+/* Hide the Page Action button (three dots in the address bar) */
+#pageActionButton {
+    display: none !important;
+}
+"
 
 
 pid=`ps -e | grep " firefox$" | xargs | cut -d" " -f1`
@@ -111,55 +160,21 @@ fi
 mkdir -p build/
 cd build/
 
-echo -n "Downloading addons "
+echo -n "Get and build dejsonlz4/jsonlz4 tools (as long as Firefox does not use the standard format for search.json compression) ..."
+
+git clone https://github.com/avih/dejsonlz4.git
+cd dejsonlz4
+gcc -Wall -o dejsonlz4 src/dejsonlz4.c src/lz4.c
+gcc -Wall -o jsonlz4 src/ref_compress/jsonlz4.c src/lz4.c
+cd ..
+
+echo " OK"
+
+echo -n "Starting Firefox to install addons. For each click '+ Add to Firefox', then 'Add' and finally close the browser ..."
 
 for addon in ${addons[@]}; do
-  wget -q https://addons.mozilla.org/firefox/downloads/latest/${addon}/addon-${addon}-latest.xpi
-  echo -n "."
+    firefox https://addons.mozilla.org/en-US/firefox/addon/${addon}/
 done
-
-echo " OK"
-
-cat > install.rdf <<_EOF_
-<?xml version="1.0" encoding="UTF-8" ?>
-
-<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:em="http://www.mozilla.org/2004/em-rdf#">
-
-  <Description about="urn:mozilla:install-manifest">
-
-    <em:id>addonbundle@pimprecords.com</em:id>
-    <em:type>32</em:type>
-
-  </Description>
-
-  <!-- Firefox -->
-  <em:targetApplication>
-    <Description>
-      <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-      <em:minVersion>38.0</em:minVersion>
-      <em:maxVersion>99.*</em:maxVersion>
-    </Description>
-  </em:targetApplication>
-
-</RDF>
-_EOF_
-
-echo -n "Creating addon bundle ..."
-
-zip -q bundle.xpi addon-*-latest.xpi install.rdf
-
-echo " OK"
-
-echo -n "Starting Firefox to install addons. Please close it manually after installation ..."
-
-firefox bundle.xpi 2>&1 >/dev/null
-
-echo " OK"
-
-echo -n "Run Firefox again in order to run (annoying) bootstrap code. Please close it manually after boot ..."
-
-firefox 2>&1 >/dev/null
 
 echo " OK"
 
@@ -182,45 +197,25 @@ done
 
 echo " OK"
 
-echo -n "Updating Adblock Plus subscriptions "
+echo -n "Updating addon configurations "
 
-rm -f "${profile_dir}adblockplus/elemhide.css"
+for customization in ${addon_customizations[@]}; do
+  parts=(${customization//%/ })
+  relative_filename=${parts[0]}
+  jq_filter=${parts[1]}
 
-file="${profile_dir}adblockplus/patterns.ini"
+  file="${profile_dir}browser-extension-data/${relative_filename}"
 
-echo "# Adblock Plus preferences" > $file
-echo "version=4" >> $file
+  if [ -f $file ]; then
+    cp $file temp.json
+    jq "${jq_filter}" temp.json > $file
+  else
+    jq -n "${jq_filter}" > $file
+    chmod 600 $file
+  fi
 
-for subscription in ${adblock_subscriptions[@]}; do
-  wget -q -O subscription.txt $subscription
-  echo "" >> $file
-  echo "[Subscription]" >> $file
-  echo "url=${subscription}" >> $file
-  title=`grep "! Title:" subscription.txt | cut -d":" -f2 | cut -d"#" -f1 | xargs -0`
-  echo "title=${title}" >> $file
-  echo "fixedTitle=true" >> $file
-  homepage=`grep "! Homepage:" subscription.txt | cut -c13-`
-  echo "homepage=${homepage}" >> $file
-  now=`date +%s`
-  echo "lastDownload=${now}" >> $file
-  echo "downloadStatus=synchronize_ok" >> $file
-  echo "lastSuccess=${now}" >> $file
-  echo "lastCheck=${now}" >> $file
-  expire_days=`grep "! Expires:" subscription.txt | cut -c12`
-  expire=`date +%s --date "now + ${expire_days} days"`
-  echo "expires=${expire}" >> $file
-  echo "softExpiration=${expire}" >> $file
-  version=`grep "! Version:" subscription.txt | cut -d":" -f2`
-  echo "version=${version}" >> $file
-  echo "requiredVersion=2.0" >> $file
-  echo "downloadCount=1" >> $file
-  echo "" >> $file
-  echo "[Subscription filters]" >> $file
-  tail -n +2 subscription.txt >> $file
   echo -n "."
 done
-
-rm -f subscription.txt
 
 echo " OK"
 
@@ -281,6 +276,16 @@ for customization in ${toolbar_visibility_customizations[@]}; do
 done
 
 sed -i "s/,}/}/g" $file
+
+echo " OK"
+
+echo -n "Creating userChrome.css ..."
+
+mkdir -p ${profile_dir}chrome
+
+file="${profile_dir}chrome/userChrome.css"
+
+echo "$userchrome_contents" > $file
 
 echo " OK"
 
